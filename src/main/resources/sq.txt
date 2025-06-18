@@ -1,0 +1,16 @@
+DB 설정 - 2025-06-18
+DB명 : bootdb
+유저 : springuser 그대로 사용
+
+create database bootdb;
+grant all privileges on bootdb.* to 'springuser'@'localhost';
+flush privileges;
+
+create table board(
+bno bigint auto_increment,
+title varchar(200) not null,
+writer varchar(200) not null,
+content text,
+reg_date datetime default now(),
+primary key(bno)
+);

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<div layout:fragment="content">
+    <h3 class="text-center my-3">Board List</h3>
+    <div class="container-md w-75">
+        <div class="row border rounded bg-body-tertiary mb-3">
+            <div class="col-2 d-flex justify-content-center align-items-center py-3 border-end">#</div>
+            <div class="col-6 d-flex justify-content-center align-items-center border-end">Title</div>
+            <div class="col-2 d-flex justify-content-center align-items-center border-end">Writer</div>
+            <div class="col-2 d-flex justify-content-center align-items-center">RegDate</div>
+        </div>
+        <div th:each="bvo:${list}" class="row mb-3">
+            <div class="col-2 d-flex justify-content-center align-items-center">[[${bvo.bno}]]</div>
+            <div class="col-6 d-flex align-items-center">
+                <a th:href="@{/board/detail(bno=${bvo.bno})}">[[${bvo.title}]]</a>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">[[${bvo.writer}]]</div>
+            <div class="col-2 d-flex justify-content-center align-items-center">[[${bvo.regDate}]]</div>
+        </div>
+    </div>
+</div>

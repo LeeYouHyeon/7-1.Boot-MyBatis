@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <!--/* 부트스트랩 css, js 링크 연결 */-->
+    <link rel="stylesheet" th:href="@{/dist/css/bootstrap.min.css}">
+    <script th:src="@{/dist/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+<!--/* <div th:replace="~{조각 파일의 경로 :: 이름}"></div> */-->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div layout:fragment="content"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
