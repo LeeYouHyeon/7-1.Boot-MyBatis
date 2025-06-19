@@ -5,7 +5,9 @@
 <mapper namespace="com.example.demo.repository.BoardMapper">
     <select id="getList" resultType="com.example.demo.domain.BoardVO">
         select bno, title, writer, reg_date from board
-        order by bno desc;
+        <include refid="search" />
+        order by bno desc
+        limit #{startIndex}, #{qty};
     </select>
 
     <select id="getDetail" resultType="com.example.demo.domain.BoardVO">
@@ -23,4 +25,35 @@
     <update id="update">
         update board set title=#{title}, content=#{content} where bno = #{bno}
     </update>
+    
+    <select id="getTotalCount" resultType="long">
+        select count(bno) from board
+        <include refid="search" />
+    </select>
+
+    <select id="getBno" resultType="long">
+        select max(bno) from board
+    </select>
+    
+    <sql id="search">
+        <if test="type != null">
+            <trim prefix="where (" suffix=")" suffixOverrides="or">
+                <foreach collection="typeToArray" item="type">
+                    <trim suffix="or">
+                        <choose>
+                            <when test="type=='t'.toString()">
+                                title like concat('%', #{keyword}, '%')
+                            </when>
+                            <when test="type=='w'.toString()">
+                                writer like concat('%', #{keyword}, '%')
+                            </when>
+                            <when test="type=='c'.toString()">
+                                content like concat('%', #{keyword}, '%')
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+        </if>
+    </sql>
 </mapper>

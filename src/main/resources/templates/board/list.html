@@ -6,6 +6,35 @@
 
 <div layout:fragment="content">
     <h3 class="text-center my-3">Board List</h3>
+    <!--검색-->
+    <!--/* th:selected=true / false */-->
+    <form class="d-flex container-md mb-3 p-0 position-relative" role="search" action="/board/list" id="searchForm">
+        <input type="hidden" name="pageNo" th:value="1">
+        <input type="hidden" name="qty" th:value="${ph.pagingVO.qty}">
+        <div class="col-2 px-1">
+            <select class="form-select" name="type" aria-label="searchType" id="type">
+                <option th:selected="${ph.pagingVO.type == null ? true : false}">-</option>
+                <option th:value="t" th:selected="${ph.pagingVO.type == 't' ? true : false}">Title</option>
+                <option th:value="w" th:selected="${ph.pagingVO.type == 'w' ? true : false}">Writer</option>
+                <option th:value="c" th:selected="${ph.pagingVO.type == 'c' ? true : false}">Content</option>
+                <option th:value="tc" th:selected="${ph.pagingVO.type == 'tc' ? true : false}">Title&Content</option>
+                <option th:value="wc" th:selected="${ph.pagingVO.type == 'wc' ? true : false}">Writer&Content</option>
+                <option th:value="tw" th:selected="${ph.pagingVO.type == 'tw' ? true : false}">Title&Writer</option>
+                <option th:value="twc" th:selected="${ph.pagingVO.type == 'twc' ? true : false}">All</option>
+            </select>
+        </div>
+        <div class="col-7 d-flex ps-2 pe-4">
+            <input type="text" id="searchKeyword" name="keyword" aria-label="searchKeyword" class="form-control">
+            <button type="button" id="searchBtn" class="btn btn-primary ms-3">Search</button>
+        </div>
+        <div class="position-absolute end-0 top-50 translate-middle-y pe-2">
+            <a th:href="@{/board/list}" th:if="${ph.pagingVO.type != null && ph.pagingVO.type.length() > 0}" class="me-3">
+                <button type="button" class="btn btn-outline-secondary">Cancel Search</button>
+            </a>
+            Total [[${ph.totalCount}]] Boards
+        </div>
+    </form>
+
     <div class="container-md w-75">
         <div class="row border rounded bg-body-tertiary mb-3">
             <div class="col-2 d-flex justify-content-center align-items-center py-3 border-end">#</div>
@@ -22,4 +51,36 @@
             <div class="col-2 d-flex justify-content-center align-items-center">[[${bvo.regDate}]]</div>
         </div>
     </div>
+    <!--페이지네이션-->
+    <!--/* ${} : JSP EL 방식 */-->
+    <!--/* 타임리프 : th: / 인라인 [[${}]] */-->
+    <!--/* disabled를 class에 추가하여 prev/next를 제어 */-->
+    <!--/* th:classappend : 동적으로 클래스를 추가 */-->
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${ph.prev eq false ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/board/list(pageNo=${ph.startPage - 1}, qty=10, type=${ph.pagingVO.type}, keyword=${ph.pagingVO.keyword})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <!--/* begin end 옵션이 없음. ${#numbers.sequence(from, to} */-->
+            <th:block th:each="i:${#numbers.sequence(ph.startPage, ph.endPage)}">
+                <li class="page-item" th:classappend="${ph.pagingVO.pageNo eq i ? 'active' : ''}">
+                    <a th:href="@{/board/list(pageNo=${i}, qty=10, type=${ph.pagingVO.type}, keyword=${ph.pagingVO.keyword})}"
+                       class="page-link">[[${i}]]</a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${ph.next eq false ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/board/list(pageNo=${ph.endPage + 1}, qty=10, type=${ph.pagingVO.type}, keyword=${ph.pagingVO.keyword})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            if (document.getElementById('type').value != null && document.getElementById('searchKeyword').value != '')
+                document.getElementById('searchForm').submit();
+        });
+    </script>
 </div>

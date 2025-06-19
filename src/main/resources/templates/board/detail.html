@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
-<div layout:fragment="content">
-    <form action="/board/update" method="post">
+<div layout:fragment="content" th:with="bvo=${bdto.boardVO}">
+    <form action="/board/update" method="post" class="mt-5" enctype="multipart/form-data">
         <input type="hidden" th:value="${bvo.bno}" id="bno" name="bno">
-        <div class="container-md w-75 my-3 border rounded">
+        <div class="container-md w-75 border border-bottom-0 rounded-top">
             <div class="row border-bottom">
                 <div class="col-2 d-flex py-3 justify-content-center align-items-center border-end bg-body-tertiary">제목</div>
                 <div class="col-10 d-flex justify-content-center align-items-center" id="titleArea">[[${bvo.title}]]</div>
@@ -19,7 +19,60 @@
                 <div class="col-2 d-flex justify-content-center align-items-center border-end bg-body-tertiary">조회수</div>
                 <div class="col-2 d-flex justify-content-center align-items-center">-</div>
             </div>
-            <div class="mb-3" id="contentArea">[[${bvo.content}]]</div>
+            <div class="pb-3" id="contentArea">[[${bvo.content}]]</div>
+        </div>
+
+        <div class="container-md w-75 mb-3 border border rounded-bottom" th:with="files=${bdto.fileList}">
+            <div class="row">
+                <div class="col d-flex justify-content-center align-items-center bg-body-tertiary py-3 border-bottom">첨부파일</div>
+            </div>
+            <div class="row bg-body-tertiary">
+                <div class="col-1 d-flex justify-content-center align-items-center py-3 border-end"></div>
+                <div class="col-1 d-flex justify-content-center align-items-center py-3 border-end">번호</div>
+                <div class="col-6 d-flex justify-content-center align-items-center py-3 border-end">파일명</div>
+                <div class="col-2 d-flex justify-content-center align-items-center py-3 border-end">미리보기</div>
+                <div class="col-2 d-flex justify-content-center align-items-center py-3">크기</div>
+            </div>
+            <div class="row border-top" th:if="${files == null || files.size() == 0}">
+                <div class="col d-flex justify-content-center align-items-center py-3">-</div>
+            </div>
+            <div class="row border-top" th:each="file, status: ${files}">
+                <div class="col-1 d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-outline-danger invisible fileRemoveBtn" th:data-uuid="${file.uuid}">X</button>
+                </div>
+                <div class="col-1 d-flex justify-content-center align-items-center py-3" th:text="${status.count}"></div>
+                <div class="col-6 d-flex">
+                    <a th:href="@{|/upload/${file.saveDir}/${file.uuid}_${file.fileName}|}"
+                       th:download="${file.fileName}" class="d-flex align-items-center ps-2">
+                        [[${file.fileName}]]
+                    </a>
+                </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                    <div th:if="${file.fileType == 1}">
+                        <img th:src="@{|/upload/${file.saveDir}/${file.uuid}_th_${file.fileName}|}" alt="${file.fileName}">
+                    </div>
+                    <div th:unless="${file.fileType == 1}">-</div>
+                </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">[[${file.fileSize}]] Bytes</div>
+            </div>
+        </div>
+
+        <div class="container-md w-75 invisible" id="fileUploadArea">
+            <!--/* file 추가 */-->
+            <div class="mb-3 d-flex justify-content-end">
+                <input type="file"
+                       class="invisible"
+                       name="files"
+                       id="file"
+                       multiple>
+                <button type="button" class="btn btn-outline-primary" id="trigger">File Upload</button>
+            </div>
+            <!--/* 파일 출력 라인 */-->
+            <div class="mb-3" id="fileZone">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">-</li>
+                </ul>
+            </div>
         </div>
         <div class="d-flex justify-content-end container-md w-75" id="buttonArea">
             <button type="button" class="btn btn-outline-secondary" id="modifyBtn">Modify</button>
@@ -30,4 +83,5 @@
     </form>
 
     <script th:src="@{/js/boardDetail.js}"></script>
+    <script th:src="@{/js/boardRegister.js}"></script>
 </div>
