@@ -1,4 +1,4 @@
-const [modifyBtn, titleArea, contentArea, buttonArea, fileUploadArea] = ['modifyBtn', 'titleArea', 'contentArea', 'buttonArea', 'fileUploadArea'].map(e => document.getElementById(e));
+const [modifyBtn, titleArea, contentArea, buttonArea, fileUploadArea, commentArea] = ['modifyBtn', 'titleArea', 'contentArea', 'buttonArea', 'fileUploadArea', 'commentArea'].map(e => document.getElementById(e));
 const bno = document.getElementById('bno').value;
 const fileRemoveBtns = document.querySelectorAll('.fileRemoveBtn');
 
@@ -10,6 +10,7 @@ document.addEventListener('click', e => {
       contentArea.innerHTML = `<textarea class="form-control" id="c" cols="30" rows="10" name="content" required>${contentArea.innerText}</textarea>`;
       for (const btn of fileRemoveBtns) btn.classList.remove('invisible');
       fileUploadArea.classList.remove("invisible");
+      commentArea.classList.add('invisible');
 
       buttonArea.innerHTML = `
       <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
@@ -25,6 +26,7 @@ document.addEventListener('click', e => {
       </a>`;
       for (const btn of fileRemoveBtns) btn.classList.add('invisible');
       fileUploadArea.classList.add('invisible');
+      commentArea.classList.remove('invisible');
       return;
     default: ;
   }

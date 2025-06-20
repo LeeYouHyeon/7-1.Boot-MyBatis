@@ -82,7 +82,7 @@ public class BoardController {
         for (FileVO fileVO : fileVOList) {
             fileRemoveHandler.deleteFile(fileVO);
         }
-        boardService.removeFiles(bno);
+        log.info(">>>> file remove {}", boardService.removeFiles(bno) > 0 ? "성공" : "실패");
         log.info(">>>> remove {} >> {}", bno, isOk > 0 ? "성공" : "실패");
         return "redirect:/board/list";
     }

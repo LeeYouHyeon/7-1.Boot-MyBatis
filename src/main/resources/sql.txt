@@ -26,3 +26,21 @@ file_size bigint,
 reg_date datetime default now(),
 primary key(uuid)
 );
+
+User, Auth 테이블 추가 - 2025-06-20
+user table 생성
+create table user(
+email varchar(200),
+pwd varchar(256),
+nick_name varchar(200),
+reg_date datetime default now(),
+last_login datetime default now(),
+primary key(email));
+
+create table auth(
+id bigint auto_increment,
+email varchar(200),
+auth varchar(50),
+primary key(id),
+foreign key(email) references user(email)
+);

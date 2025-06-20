@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="header">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -17,6 +18,25 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/board/list}">BoardList</a>
+                    </li>
+                    <th:block sec:authorize="isAnonymous()">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" th:href="@{/user/signup}">Sign Up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" th:href="@{/user/login}">Login</a>
+                        </li>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()" th:with="auth=${#authentication.getPrincipal()}">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" th:href="@{/user/logout}">Logout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" th:href="@{/user/modify}">[[${auth.userVO.nickName}]] Modify</a>
+                        </li>
+                    </th:block>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" aria-current="page" th:href="@{/user/list}">UserList</a>
                     </li>
                 </ul>
             </div>

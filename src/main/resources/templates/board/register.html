@@ -13,7 +13,7 @@
         </div>
         <div class="mb-3">
             <label for="w" class="form-label">writer</label>
-            <input type="text" class="form-control" id="w" placeholder="test@test.com" name="writer" required>
+            <input type="text" class="form-control" id="w" placeholder="test@test.com" name="writer" th:value="${#authentication.getPrincipal().username}" readonly>
         </div>
         <div class="mb-3">
             <label for="c" class="form-label">content</label>
