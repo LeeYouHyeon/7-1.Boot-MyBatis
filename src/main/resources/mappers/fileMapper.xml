@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.FileMapper">
+    <insert id="insertFile">
+        insert into file(uuid, save_dir, file_name, file_type, bno, file_size)
+        values(#{uuid}, #{saveDir}, #{fileName}, #{fileType}, #{bno}, #{fileSize})
+    </insert>
+    <select id="getFiles" resultType="com.example.demo.domain.FileVO">
+        select * from file where bno=#{bno}
+    </select>
+    <delete id="remove">
+        delete from file where uuid=#{uuid}
+    </delete>
+
+    <select id="getFile" resultType="com.example.demo.domain.FileVO">
+        select * from file where uuid=#{uuid}
+    </select>
+
+    <delete id="removeFiles">
+        delete from file where bno=#{bno}
+    </delete>
+</mapper>

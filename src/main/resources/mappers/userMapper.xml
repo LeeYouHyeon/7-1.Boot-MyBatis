@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.UserMapper">
+    <insert id="register">
+        insert into user(email, pwd, nick_name) values(#{email}, #{pwd}, #{nickName})
+    </insert>
+
+    <insert id="insertAuthInit">
+        insert into auth(email, auth) values(#{email}, 'ROLE_USER')
+    </insert>
+
+    <select id="getUserByEmail" resultType="com.example.demo.domain.UserVO">
+        select * from user where email = #{email}
+    </select>
+
+    <select id="getAuthList" resultType="com.example.demo.domain.AuthVO">
+        select * from auth where email = #{email}
+    </select>
+
+    <update id="update">
+        update user set nick_name=#{nickName} where email=#{email}
+    </update>
+
+    <select id="getTotalCount" resultType="long">
+        select count(*) from user <include refid="search" />
+    </select>
+
+    <select id="getList" resultType="com.example.demo.domain.UserVO">
+        select * from user limit #{startIndex}, #{qty}
+    </select>
+
+    <delete id="deleteAuths">
+        delete * from auth where email=#{email}
+    </delete>
+    <delete id="deleteUser">
+        delete * from user where email=#{email}
+    </delete>
+
+    <sql id="search">
+        <if test="type != null">
+            <trim prefix="where (" suffix=")" suffixOverrides="or">
+                <foreach collection="typeToArray" item="type">
+                    <trim suffix="or">
+                        <choose>
+                            <when test="type=='e'.toString()">
+                                email like concat('%', #{keyword}, '%')
+                            </when>
+                            <when test="type=='n'.toString()">
+                                nick_name like concat('%', #{keyword}, '%')
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+        </if>
+    </sql>
+</mapper>

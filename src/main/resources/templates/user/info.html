@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<div layout:fragment="content" th:with="user=${#authentication.getPrincipal().userVO}">
+    <h3 class="text-center my-3">개인정보</h3>
+    <form class="container-md w-50 border rounded bg-body-tertiary mb-3"
+        action="/user/update" method="post">
+        <div class="row mb-3">
+            <div class="col-3 d-flex justify-content-center align-items-center border rounded bg-white">
+                이메일
+            </div>
+            <div class="col-9 px-2 border rounded bg-white">[[${user.email}]]</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3 d-flex justify-content-center align-items-center border rounded bg-white">
+                닉네임
+            </div>
+            <div class="col-9 px-2 border rounded bg-white">
+                <label for="nickName" id="nickNameLabel">[[${user.nickName}]]</label>
+                <input type="text" id="nickName" name="nickName" class="form-control invisible" th:value="${user.nickName}" required>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end" id="modifyBtnArea">
+            <button type="button" class="btn btn-outline-danger" id="resignBtn">탈퇴</button>
+            <button type="button" class="btn btn-outline-primary" id="modifyBtn">수정</button>
+        </div>
+        <div class="d-flex justify-content-end invisible" id="updateBtnArea">
+            <button type="button" class="btn btn-outline-secondary" id="cancelBtn">취소</button>
+            <button type="submit" class="btn btn-outline-warning">확인</button>
+        </div>
+    </form>
+    <script>
+        const [modifyBtnArea, updateBtnArea, resignBtn, cancelBtn, modifyBtn, nickNameLabel, nickName] =
+          ['modifyBtnArea', 'updateBtnArea', 'resignBtn', 'cancelBtn', 'modifyBtn', 'nickNameLabel', 'nickName'].map(e => document.getElementById(e));
+        document.addEventListener('click', e => {
+          switch (e.target.id) {
+            case 'modifyBtn':
+              modifyBtnArea.classList.add('invisible');
+              updateBtnArea.classList.remove('invisible');
+              nickName.classList.remove('invisible');
+              nickNameLabel.classList.add('invisible');
+              break;
+            case 'resignBtn':
+              if (confirm('정말 탈퇴하시겠습니까?')) fetch('/user/remove');
+              break;
+            case 'cancelBtn':
+              modifyBtnArea.classList.remove('invisible');
+              updateBtnArea.classList.add('invisible');
+              nickName.classList.add('invisible');
+              nickNameLabel.classList.remove('invisible');
+              break;
+          }
+        });
+    </script>
+</div>
